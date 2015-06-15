@@ -1,0 +1,116 @@
+<div class="SlotPicker">
+
+  <div class="DateSlider ng-show" data-emulatetouch="true" ng-show="supportsTouch()">
+    <div class="DateSlider-month">
+      <span class="is-active">{{currentMonth.name}}</span>
+    </div>
+    <div class="DateSlider-sliders">
+      
+      <div class="DateSlider-smallDates scroll">
+        <ol class="DateSlider-days">
+          <li ng-repeat="date in slide_settings.buffer_dates" ng-class="{unavailable: date.spaces == 0}">
+            {{date.date.format("DD")}}
+          </li>
+        </ol>
+      </div>
+
+      <div class="DateSlider-touch scroll">
+        <ol class="DateSlider-days"></ol>
+      </div>
+
+      <div class="DateSlider-portalFrame">
+      </div>
+
+      <div class="DateSlider-largeDates scroll">
+        <ol class="DateSlider-days">
+          <li ng-repeat="date in slide_settings.all_dates" ng-class="{unavailable: date.spaces == 0}">
+              <small style="">{{date.date.format("ddd")}}</small>
+            {{date.date.format("DD")}}
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="BookingCalendar" ng-hide="supportsTouch()">
+
+    <div class="BookingCalendar-header">
+      <a class="BookingCalendar-nav BookingCalendar-nav--prev" ng-class="{'is-active': !isPast()}" ng-click="previous()">{{currentMonth.prev_month}}</a>
+      <strong class="BookingCalendar-currentMonth">{{currentMonth.name}}</strong>
+      <a class="BookingCalendar-nav BookingCalendar-nav--next" ng-class="{'is-active': true}" ng-click="next()">{{currentMonth.next_month}}</a>
+    </div>
+
+    <table class="BookingCalendar-dates">
+      <thead>
+        <tr>
+          <th ng-repeat="day in weeks[0].week">{{day.date | datetime: 'ddd': false}}</th>
+        </tr>
+      </thead>
+    </table>
+
+    <div class="BookingCalendar-mask">
+      <table class="BookingCalendar-dates">
+        <tbody class="BookingCalendar-datesBody">
+          <tr ng-repeat="week in weeks">
+            <td ng-repeat="day in week.week" class="{{day.klass}}" ng-class="{'is-active': selDay.active && selDay.day.date.isSame(day.date, 'day')}"> 
+              <div class="BookingCalendar-content">
+                <a class="BookingCalendar-dateLink" data-date="{{ day.date }}" ng-click="selectDay(day)">
+                  <span class="BookingCalendar-day">{{ day.day }}</span>
+                  <span ng-if="day.today" class="BookingCalendar-tag BookingCalendar-tag--today">Today</span>
+                  <span ng-if="day.newMonth" class="BookingCalendar-tag" id="month-{{ day.monthIso }}">{{ day.monthShort }}</span>
+                </a>
+              </div>
+            </td>
+          <tr/>  
+        </tbody>
+      </table>
+    </div>
+
+    <ul class="BookingCalendar-legend">
+      <li>
+        <div class="BookingCalendar-legendBox"></div>
+        Available
+      </li>
+      <li>
+        <div class="BookingCalendar-legendBox BookingCalendar-legendBox--unavailable"></div>
+        Unavailable
+      </li>
+    </ul>
+  </div>
+
+  <div class="SlotPicker-timeSlots" ng-class="{'is-active': selDay.active}">
+    <ul class="SlotPicker-days">
+
+      <li class="SlotPicker-day" ng-class="{'is-active': selDay.active}" ng-show="selDay.slots.length > 0">
+        <h2 class="SlotPicker-dayTitle">{{ selDay.day.date | datetime: 'dddd D MMMM': false }}</h2>
+        <p ng-if="selDay.slots.length == 1" class="SlotPicker-dayOneSlot">Only one time is available on this day, select it to continue</p>
+
+        <label ng-repeat="slot in selDay.slots" class="SlotPicker-label" ng-class="{'is-active': slot.selected, 'is-disabled': slot.disabled}" ng-click="highlightSlot(slot)">
+          <input class="SlotPicker-slot" type="radio" name="time-slots" ng-model="selDay.time" value={{slot.time}}>
+          <strong class="SlotPicker-time">{{ slot.time | twelve_hour_time: {omit_mins_on_hour:true} }}</strong>
+          <span class="SlotPicker-duration">{{ slot.service.listed_duration | time_period: {abbr_units: true, seperator: ''} }}</span>
+        </label>
+      </li>
+
+      <li class="SlotPicker-day SlotPicker-day--past" ng-show="selDay.past" ng-class="{'is-active': selDay.active}">
+        <h2 class="SlotPicker-dayTitle">{{ selDay.day.date | datetime: 'dddd D MMMM': false }}</h2>
+        <p>It is not possible to book an appointment in the past.</p>
+      </li>
+
+      <li class="SlotPicker-day SlotPicker-day--unavailable" ng-show="selDay.slots.length == 0 && !selDay.past" ng-class="{'is-active': selDay.active}">
+        <h2 class="SlotPicker-dayTitle">{{ selDay.day.date | datetime: 'dddd D MMMM': false }}</h2>
+        <p>It is not possible to book an appointment on this day.</p>
+      </li>
+<!--       <li class="SlotPicker-day SlotPicker-day--beyond">
+        <h2 class="SlotPicker-dayTitle"></h2>
+        <p>You can only book an appointment in the next {{ daysInRange }} days.</p>
+      </li>
+      <li class="SlotPicker-day SlotPicker-day--leadtime">
+        <h2 class="SlotPicker-dayTitle"></h2>
+        <p>You can only book an appointment 3 days in advance.</p>
+      </li> -->
+    </ul>
+  </div>
+</div>
+

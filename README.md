@@ -9,7 +9,7 @@ The FCO slot picker is designed to be embedded as part of a BookingBug booking j
 
 ## Key Differences
 Key differences between the MOJ and FCO slot pickers include:
-- Refactored code to remove DOM mantipulation where possible as this is handled by AngularJS's two way data binding capabilities
+- Refactored code to remove DOM manipulation where possible as this is handled by AngularJS's two way data binding capabilities
 - Refactored code to utilise BookingBug's AngularJS services for retrieving availability data
 - Refactored code to interact with a BookingBug BasketItem when setting date/time
 - Event binding has been removed and updated to use ng-click

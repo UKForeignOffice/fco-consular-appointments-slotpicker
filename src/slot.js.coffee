@@ -1,4 +1,4 @@
-angular.module('BB.Directives').directive 'SlotPicker', (LocaleService, DayService, AlertService, TimeService, FormDataStoreService) ->
+angular.module('BB.Directives').directive 'SlotPicker', (DayService, TimeService) ->
 
   restrict: 'AEC'
   replace: true
@@ -464,10 +464,7 @@ angular.module('BB.Directives').directive 'DateSliderLargeDates', () ->
   scope : true
   #require: '^BBCtrl'
 
-
   link: (scope, element, attrs) ->
-    # initialise moment locale
-    #moment.locale(LocaleService)
     element.on {
         chosen: () =>
           if scope.differentPos(element.scrollLeft())
